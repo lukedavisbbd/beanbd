@@ -1,0 +1,26 @@
+name: Flyway Deploy
+ 
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'migrations/**'
+ 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+     
+      - name: Flyway validate and migrate
+        uses: joshuaavalon/flyway-action@v3.0.0
+        with:
+          url: jdbc:mysql://${{ secrets.DB_HOST }}/beanbd
+          user: ${{ secrets.DB_USERNAME }}
+          password: ${{ secrets.DB_PASSWORD }}
+          locations: filesystem:./migrations
+        env:
+          FLYWAY_VALIDATE_MIGRATION_NAMING: true
+ 
