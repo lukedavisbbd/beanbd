@@ -1,4 +1,4 @@
-name: Flyway Deploy
+name: Flyway Migrate
  
 on:
   push:
