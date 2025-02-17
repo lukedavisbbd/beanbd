@@ -1,8 +1,8 @@
 CREATE TABLE `stock` (
-  `id` integer PRIMARY KEY,
-  `name` varchar(255),
-  `unit` varchar(255),
-  `quantity` real,
+  `id` integer PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(255) UNIQUE NOT NULL,
+  `unit` varchar(255) NOT NULL,
+  `quantity` real NOT NULL,
   `warning_threshold` real
 );
 
@@ -11,50 +11,51 @@ CREATE TABLE `units` (
 );
 
 CREATE TABLE `suppliers` (
-  `id` integer PRIMARY KEY,
-  `name` varchar(255) UNIQUE,
-  `phone_number` varchar(255)
+  `id` integer PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(255) UNIQUE NOT NULL,
+  `phone_number` varchar(255) NOT NULL
 );
 
 CREATE TABLE `stock_order` (
-  `id` integer PRIMARY KEY,
-  `supplier` integer,
-  `status` integer
+  `id` integer PRIMARY KEY AUTO_INCREMENT,
+  `supplier` integer NOT NULL,
+  `status` ENUM ('pending', 'completed', 'failed') NOT NULL
 );
 
 CREATE TABLE `stock_order_items` (
   `order` integer,
   `stock_item` integer,
-  `quantity` real,
+  `quantity` real NOT NULL,
   PRIMARY KEY (`order`, `stock_item`)
 );
 
 CREATE TABLE `coffee_recipes` (
-  `id` integer PRIMARY KEY,
-  `name` varchar(255) UNIQUE
+  `id` integer PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE `coffee_recipe_ingredients` (
   `coffee` integer,
   `stock` integer,
-  `quantity` real
+  `quantity` real NOT NULL,
+  PRIMARY KEY (`coffee`, `stock`)
 );
 
 CREATE TABLE `orders` (
-  `id` integer PRIMARY KEY,
-  `coffee` integer,
-  `user` integer,
-  `ordered_at` timestamp
+  `id` integer PRIMARY KEY AUTO_INCREMENT,
+  `coffee` integer NOT NULL,
+  `user` integer NOT NULL,
+  `ordered_at` timestamp DEFAULT (now())
 );
 
 CREATE TABLE `users` (
-  `id` integer PRIMARY KEY,
-  `name` varchar(255) UNIQUE
+  `id` integer PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE `roles` (
-  `id` integer PRIMARY KEY,
-  `name` varchar(255) UNIQUE
+  `id` integer PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE `user_roles` (
