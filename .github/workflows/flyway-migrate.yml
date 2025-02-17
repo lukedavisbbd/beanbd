@@ -26,26 +26,21 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: af-south-1
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.3.0
-
-      - name: Terraform Init
-        working-directory: terraform
-        run: terraform init
-
-      - name: Terraform Refresh
-        working-directory: terraform
-        run: terraform refresh
-
       - name: Get outputs
         uses: dflook/terraform-output@v1
         id: tf-outputs
         with:
           path: terraform
 
-      - run: "# ${{ steps.tf-outputs.outputs.beanbd_db_endpoint }}"
+      - run: "# DB Endpoint: ${{ steps.tf-outputs.outputs.beanbd_db_endpoint }}"
+
+      - name: Install MSSQL Client
+        uses: potatoqualitee/mssqlsuite@v1.8
+        with:
+          install: sqlclient
+
+      - name: Create Database
+        run: sqlcmd -S "${{ steps.tf-outputs.outputs.beanbd_db_endpoint }}" -U "${{ vars.DB_USERNAME }}" -P "${{ secrets.DB_PASSWORD }}" -d master -Q "IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'beanbd_db') BEGIN CREATE DATABASE beanbd_db; END;" -C
       
       - name: Flyway validate and migrate
         uses: joshuaavalon/flyway-action@v3.0.0
