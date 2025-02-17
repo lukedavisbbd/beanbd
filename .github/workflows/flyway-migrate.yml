@@ -50,7 +50,7 @@ jobs:
       - name: Flyway validate and migrate
         uses: joshuaavalon/flyway-action@v3.0.0
         with:
-          url: jdbc:mysql://${{ steps.tf-outputs.outputs.beanbd_db_endpoint }}/beanbd_db
+          url: jdbc:sqlserver://${{ steps.tf-outputs.outputs.beanbd_db_endpoint }};encrypt=true;databaseName=beanbd_db;trustServerCertificate=true;
           user: ${{ vars.DB_USERNAME }}
           password: ${{ secrets.DB_PASSWORD }}
           locations: filesystem:./migrations
