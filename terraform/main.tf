@@ -63,16 +63,16 @@ resource "aws_security_group" "allow_tls" {
 
 resource "aws_vpc_security_group_ingress_rule" "allow_tcp" {
   security_group_id = aws_security_group.allow_tls.id
-  from_port         = 3306
-  to_port           = 3306
+  from_port         = var.db_port
+  to_port           = var.db_port
   ip_protocol       = "tcp"
   cidr_ipv4         = "0.0.0.0/0"
 }
 
 resource "aws_vpc_security_group_egress_rule" "allow_tcp" {
   security_group_id = aws_security_group.allow_tls.id
-  from_port         = 3306
-  to_port           = 3306
+  from_port         = var.db_port
+  to_port           = var.db_port
   ip_protocol       = "tcp"
   cidr_ipv4         = "0.0.0.0/0"
 }
@@ -92,6 +92,7 @@ resource "aws_db_instance" "beanbd_instance" {
   maintenance_window      = "sun:05:00-sun:06:00"
   skip_final_snapshot     = true
 
+  port                   = var.db_port
   username               = var.db_username
   password               = var.db_password
   db_subnet_group_name   = aws_db_subnet_group.beanbd_db_subnet_group.name
