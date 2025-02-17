@@ -80,12 +80,11 @@ resource "aws_vpc_security_group_egress_rule" "allow_tcp" {
 # RDS instance
 
 resource "aws_db_instance" "beanbd_instance" {
-
   identifier          = "beanbd-db"
-  engine              = "mysql"
-  engine_version      = "8.0"
+  engine              = "sqlserver-ex"
+  engine_version      = "15.00.4415.2.v1"
   instance_class      = "db.t3.micro"
-  allocated_storage   = 10
+  allocated_storage   = 20
   publicly_accessible = true
   
   backup_retention_period = 7
@@ -93,7 +92,6 @@ resource "aws_db_instance" "beanbd_instance" {
   maintenance_window      = "sun:05:00-sun:06:00"
   skip_final_snapshot     = true
 
-  db_name                = var.db_name
   username               = var.db_username
   password               = var.db_password
   db_subnet_group_name   = aws_db_subnet_group.beanbd_db_subnet_group.name
