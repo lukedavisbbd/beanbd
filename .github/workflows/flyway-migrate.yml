@@ -40,7 +40,7 @@ jobs:
           install: sqlclient
 
       - name: Create Database
-        run: sqlcmd -S "${{ steps.tf-outputs.outputs.beanbd_db_endpoint }}" -U "${{ vars.DB_USERNAME }}" -P "${{ secrets.DB_PASSWORD }}" -d master -Q "IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'beanbd_db') BEGIN CREATE DATABASE beanbd_db; END;" -C
+        run: sqlcmd -S "${{ steps.tf-outputs.outputs.beanbd_db_address }},${{ steps.tf-outputs.outputs.beanbd_db_port }}" -U "${{ vars.DB_USERNAME }}" -P "${{ secrets.DB_PASSWORD }}" -d master -Q "IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'beanbd_db') BEGIN CREATE DATABASE beanbd_db; END;" -C
       
       - name: Flyway validate and migrate
         uses: joshuaavalon/flyway-action@v3.0.0
