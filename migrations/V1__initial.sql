@@ -2,7 +2,7 @@ CREATE TABLE [stock] (
   [id] int PRIMARY KEY IDENTITY(1, 1),
   [name] nvarchar(255) UNIQUE NOT NULL,
   [unit] nvarchar(255) NOT NULL,
-  [quantity] real NOT NULL CHECK ([quantity] > 0.0),
+  [quantity] real NOT NULL CHECK ([quantity] >= 0.0),
   [warning_threshold] real
 )
 GO
