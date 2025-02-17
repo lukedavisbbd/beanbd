@@ -22,7 +22,7 @@ GO
 CREATE TABLE [stock_order] (
   [id] int PRIMARY KEY IDENTITY(1, 1),
   [supplier] int NOT NULL,
-  [status] nvarchar(255) NOT NULL CHECK ([status] IN ('pending', 'completed', 'failed')) NOT NULL,
+  [status] nvarchar(255) NOT NULL CHECK ([status] IN ('pending', 'completed', 'failed')),
   [ordered_at] datetime2 DEFAULT (GETDATE())
 )
 GO
