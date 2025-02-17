@@ -1,7 +1,6 @@
 variable "db_username" {
   type        = string
   description = "The username for the database"
-  sensitive   = true
 }
 
 variable "db_password" {
@@ -10,9 +9,9 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "db_name" {
-  type        = string
-  description = "The name of the database"
+variable "db_port" {
+  type        = number
+  description = "The port for the database"
 }
 
 variable "vpc_cidr_block" {
