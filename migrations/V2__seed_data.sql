@@ -11,7 +11,7 @@ INSERT INTO [suppliers] ([name], [phone_number]) VALUES
 INSERT INTO [units] VALUES ('units'), ('kg'), ('litres');
 
 -- Stock
-INSERT INTO [stock] VALUES ([name], [unit], [quantity], [warning_threshold])
+INSERT INTO [stock] ([name], [unit], [quantity], [warning_threshold]) VALUES
     ('Arabica Coffee Beans', 'kg', 1000, 200),
     ('Espresso Coffee Beans', 'kg', 500, 100),
     ('Paper Coffee Cups', 'units', 2000, 300),
