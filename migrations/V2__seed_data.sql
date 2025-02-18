@@ -37,7 +37,7 @@ INSERT INTO [user_roles] ([user], [role]) VALUES
     (2, 2);
 
 -- Stock Orders
-INSERT INTO [stock_order] ([supplier], [status], [ordered_at]) VALUES
+INSERT INTO [stock_orders] ([supplier], [status], [ordered_at]) VALUES
     (3, 'completed', '2025-02-17 10:00:00'),
     (4, 'completed', '2025-02-16 14:30:00'),
     (1, 'completed', '2025-02-15 09:45:00'),
@@ -135,17 +135,17 @@ INSERT INTO [coffee_recipe_ingredients] ([coffee], [stock], [quantity]) VALUES
     (3, 3, 1);    -- Paper Coffee Cups, 1 unit
 
 -- Coffee Orders
-INSERT INTO [orders] ([coffee], [user], [ordered_at]) VALUES
+INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
     (1, 2, '2025-02-17 08:15:00');  -- Espresso
 
-INSERT INTO [orders] ([coffee], [user], [ordered_at]) VALUES
+INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
     (2, 2, '2025-02-17 08:30:00');  -- Cappuccino
 
-INSERT INTO [orders] ([coffee], [user], [ordered_at]) VALUES
+INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
     (3, 2, '2025-02-17 09:00:00');  -- Latte
 
-INSERT INTO [orders] ([coffee], [user], [ordered_at]) VALUES
+INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
     (1, 2, '2025-02-17 10:00:00');  -- Espresso
 
-INSERT INTO [orders] ([coffee], [user], [ordered_at]) VALUES
+INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
     (2, 2, '2025-02-17 12:30:00');  -- Cappuccino
