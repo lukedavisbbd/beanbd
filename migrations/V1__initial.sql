@@ -31,7 +31,7 @@ GO
 CREATE TABLE [stock_order_items] (
   [order] int,
   [stock_item] int,
-  [quantity] real NOT NULL CHECK ([quantity] >= 0.0),
+  [quantity] real NOT NULL CHECK ([quantity] > 0.0),
   PRIMARY KEY ([order], [stock_item])
 )
 GO
@@ -45,7 +45,7 @@ GO
 CREATE TABLE [coffee_recipe_ingredients] (
   [coffee] int,
   [stock] int,
-  [quantity] real NOT NULL CHECK ([quantity] >= 0.0),
+  [quantity] real NOT NULL CHECK ([quantity] > 0.0),
   PRIMARY KEY ([coffee], [stock])
 )
 GO
