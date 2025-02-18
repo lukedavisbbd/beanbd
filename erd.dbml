@@ -1,0 +1,70 @@
+Table stock {
+  id int [pk, increment]
+  name varchar [not null, unique]
+  unit varchar [not null, ref: > units.name]
+  quantity real [not null]
+  warning_threshold real
+}
+
+Table units {
+  name varchar [pk]
+}
+
+Table suppliers {
+  id int [pk, increment]
+  name varchar [not null, unique]
+  phone_number varchar [not null]
+}
+
+Enum order_status {
+  pending
+  completed
+  failed
+}
+
+Table stock_orders {
+  id int [pk, increment]
+  supplier int [not null, ref: > suppliers.id]
+  status order_status [not null]
+  ordered_at datetime2 [default: `GETDATE()`]
+}
+
+Table stock_order_items {
+  order int [pk, ref: > stock_orders.id]
+  stock_item int [pk, ref: > stock.id]
+  quantity real [not null]
+}
+
+Table coffee_recipes {
+  id int [pk, increment]
+  name varchar [not null, unique]
+}
+
+Table coffee_recipe_ingredients {
+  coffee int [pk, ref: > coffee_recipes.id]
+  stock int [pk, ref: > stock.id]
+  quantity real [not null]
+}
+
+Table coffee_orders {
+  id int [pk, increment]
+  coffee int [not null, ref: > coffee_recipes.id]
+  user int [not null, ref: > users.id]
+  ordered_at datetime2 [default: `GETDATE()`]
+}
+
+Table users {
+  id int [pk, increment]
+  name varchar [not null, unique]
+  active bit [not null]
+}
+
+Table roles {
+  id int [pk, increment]
+  name varchar [not null, unique]
+}
+
+Table user_roles {
+  user int [pk, ref: > users.id]
+  role int [pk, ref: > roles.id]
+}
