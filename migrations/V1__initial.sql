@@ -24,7 +24,9 @@ CREATE TABLE [stock_orders] (
   [id] int PRIMARY KEY IDENTITY(1, 1),
   [supplier] int NOT NULL,
   [status] nvarchar(64) COLLATE Latin1_General_100_CS_AS_SC NOT NULL CHECK ([status] IN ('pending', 'completed', 'failed')),
-  [ordered_at] datetime2 DEFAULT (GETDATE())
+  [accepted_by] int,
+  [ordered_at] datetime2 DEFAULT (GETDATE()),
+  CONSTRAINT stock_order_accepted_by_complete CHECK ([accepted_by] IS NOT NULL AND [status] = 'completed' OR [status] <> 'completed')
 )
 GO
 
@@ -82,6 +84,9 @@ ALTER TABLE [stock] ADD FOREIGN KEY ([unit]) REFERENCES [units] ([name])
 GO
 
 ALTER TABLE [stock_orders] ADD FOREIGN KEY ([supplier]) REFERENCES [suppliers] ([id])
+GO
+
+ALTER TABLE [stock_orders] ADD FOREIGN KEY ([accepted_by]) REFERENCES [users] ([id])
 GO
 
 ALTER TABLE [stock_order_items] ADD FOREIGN KEY ([order]) REFERENCES [stock_orders] ([id])

@@ -7,8 +7,8 @@ AS
 BEGIN
     BEGIN TRANSACTION;
 
-    IF 'stock_consumer' NOT IN (SELECT [roles].[name] FROM [user_roles] INNER JOIN [roles] ON [user_roles].[role] = [roles].[id] WHERE [user_roles].[user] = @user)
-        THROW 50000, 'the user does not exist or does not have permission "stock_consumer"', 0;
+    IF 'stock_consumer' NOT IN (SELECT [roles].[name] FROM [user_roles] INNER JOIN [roles] ON [user_roles].[role] = [roles].[id] INNER JOIN [users] ON [users].[id] = [user_roles].[user] WHERE [user_roles].[user] = @user AND [users].[active] = 1)
+        THROW 50000, 'the user does not exist, does not have permission "stock_consumer", or has been deactivated', 0;
 
     -- Decrease stock by according to coffee recipe ingredients
     UPDATE [stock] SET [stock].[quantity] = [stock].[quantity] - (SELECT COALESCE(SUM([ci].[quantity]), 0.0) FROM [coffee_recipe_ingredients] AS [ci] WHERE [ci].[coffee] = @coffee AND [ci].[stock] = [stock].[id]);
@@ -35,8 +35,6 @@ CREATE PROCEDURE RecordCoffeeOrderByName (
 AS
 BEGIN
     BEGIN TRANSACTION;
-    IF 'stock_consumer' NOT IN (SELECT [roles].[name] FROM [user_roles] INNER JOIN [roles] ON [user_roles].[role] = [roles].[id] WHERE [user_roles].[user] = @user)
-        THROW 50000, 'the user does not exist or does not have permission "stock_consumer"', 0;
 
     DECLARE @coffee int;
     SELECT @coffee = [id] FROM [coffee_recipes] WHERE [name] = @coffee_name;
