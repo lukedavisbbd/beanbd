@@ -43,3 +43,125 @@ BEGIN
     COMMIT TRANSACTION;
 END
 GO
+
+-- Order stock from supplier
+
+CREATE PROCEDURE OrderStock
+    @stock_id INT,       
+    @quantity REAL,      
+    @supplier_id INT,    
+    @order_id INT OUTPUT,
+    @user_id INT  
+AS
+BEGIN
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+
+		IF NOT EXISTS (
+            SELECT 1 
+            FROM [users] u
+            WHERE u.[id] = @user_id AND u.[active] = 1
+        )
+        BEGIN
+            THROW 50004, 'Access Denied: Inactive user.', 1;
+        END
+
+        IF NOT EXISTS (
+            SELECT 1 
+            FROM [user_roles] ur
+            INNER JOIN [roles] r ON ur.[role] = r.[id]
+            WHERE ur.[user] = @user_id AND r.[name] = 'stock_manager' 
+        )
+        BEGIN
+            THROW 50000, 'Access Denied: Only Stock Managers can order stock.', 1;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM [suppliers] WHERE [id] = @supplier_id)
+        BEGIN
+            THROW 50001, 'Invalid Supplier: The specified supplier does not exist.', 1;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM [stock] WHERE [id] = @stock_id)
+        BEGIN
+            THROW 50002, 'Invalid Stock Item: The specified stock item does not exist.', 1;
+        END
+
+        IF @quantity <= 0
+        BEGIN
+            THROW 50003, 'Invalid Quantity: The quantity must be greater than zero.', 1;
+        END
+
+        INSERT INTO [stock_orders] ([supplier], [status])
+        VALUES (@supplier_id, 'pending');
+
+        SET @order_id = SCOPE_IDENTITY();
+
+        INSERT INTO [stock_order_items] ([order], [stock_item], [quantity])
+        VALUES (@order_id, @stock_id, @quantity);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH       
+        ROLLBACK TRANSACTION;
+        
+        THROW;
+    END CATCH
+END;
+GO
+
+---mark pending order as completed or failed 
+
+CREATE PROCEDURE CompleteOrder
+    @order_id INT,       
+    @status NVARCHAR(64)
+AS
+BEGIN
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM [stock_orders] WHERE [id] = @order_id)
+        BEGIN
+            THROW 50001, 'Invalid Order: The specified order does not exist.', 1;
+        END
+
+        IF @status NOT IN ('failed', 'completed')
+        BEGIN
+            THROW 50002, 'Invalid Status: The status must be either "failed" or "completed".', 1;
+        END
+
+        IF @status = 'failed'
+        BEGIN
+            UPDATE so
+            SET so.status = @status
+            FROM [stock_orders] so
+            WHERE so.[id] = @order_id;
+        END
+
+        ELSE IF @status = 'completed'
+        BEGIN
+            IF NOT EXISTS (SELECT 1 FROM stock_order_items WHERE [order] = @order_id)
+            BEGIN
+                THROW 50003, 'Invalid Order Items: The order has no items.', 1;
+            END
+
+            UPDATE s
+            SET s.[quantity] = s.[quantity] + soi.[quantity]
+            FROM stock s
+            INNER JOIN [stock_order_items] soi ON s.[id] = soi.[stock_item]
+            WHERE soi.[order] = @order_id;
+
+            UPDATE so
+            SET so.status = @status
+            FROM [stock_orders] so
+            WHERE so.[id] = @order_id;
+        END
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END;
