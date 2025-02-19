@@ -165,6 +165,7 @@ BEGIN
         THROW;
     END CATCH
 END;
+GO
 
 --- get the amount of stock (in their units) consumed for a certain period(days)
 CREATE PROCEDURE StockConsumption( 
