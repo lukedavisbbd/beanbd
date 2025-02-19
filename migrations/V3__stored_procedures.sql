@@ -43,3 +43,32 @@ BEGIN
     COMMIT TRANSACTION;
 END
 GO
+
+
+--- get the amount of stock (in their units) consumed for a certain period(days)
+CREATE PROCEDURE StockConsumption( 
+	@start_day int
+)
+AS
+BEGIN
+	BEGIN TRANSACTION;
+	SELECT 
+		[s].[id] AS [stock_id],
+		[s].[name] AS [stock_name],
+		[s].[unit] AS [stock_unit],
+		ROUND(SUM([cci].[quantity]),2) AS [total_consumed] 
+	FROM 
+		[coffee_orders] AS [co]
+	JOIN 
+		[coffee_recipes] AS [cr] ON [co].[coffee] = [cr].[id]
+	JOIN 
+		[coffee_recipe_ingredients] AS [cci] ON [cr].[id] = [cci].[coffee]
+	JOIN 
+		[stock] AS [s] ON [cci].[stock] = [s].[id]
+	WHERE
+		[co].[ordered_at] BETWEEN DATEADD(DAY, -@start_day, GETDATE()) AND GETDATE()
+	GROUP BY 
+		[s].[id], [s].[name], [s].[unit];
+	COMMIT TRANSACTION;
+END
+GO
