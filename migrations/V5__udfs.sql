@@ -7,7 +7,7 @@ BEGIN
 	DECLARE @NumberOfOrders int;
 	SELECT @NumberOfOrders = COUNT(id)
 	FROM dbo.coffee_orders
-	WHERE (FORMAT(ordered_at, 'HH:mm:ss') BETWEEN @startTime AND @endTime) AND (FORMAT(ordered_at, 'yyyy-MM-dd') = @day);
+	WHERE (FORMAT([ordered_at], 'HH:mm:ss') BETWEEN @startTime AND @endTime) AND (FORMAT([ordered_at], 'yyyy-MM-dd') = @day);
 
 	RETURN @NumberOfOrders;
 END;
@@ -23,7 +23,7 @@ BEGIN
 	DECLARE @NumberOfOrders int;
 	SELECT @NumberOfOrders = COUNT(id)
 	FROM dbo.coffee_orders
-	WHERE (FORMAT(ordered_at, 'HH:mm:ss') BETWEEN @startTime AND @endTime) AND (YEAR(ordered_at) = @year) AND (MONTH(ordered_at) = @month);
+	WHERE (FORMAT([ordered_at], 'HH:mm:ss') BETWEEN @startTime AND @endTime) AND (YEAR([ordered_at]) = @year) AND (MONTH([ordered_at]) = @month);
 
 	RETURN @NumberOfOrders;
 END;
@@ -37,21 +37,21 @@ BEGIN
 	DECLARE @NumberOfOrders int;
 	SELECT @NumberOfOrders = COUNT(id)
 	FROM dbo.coffee_orders
-	WHERE (FORMAT(ordered_at, 'HH:mm:ss') BETWEEN @startTime AND @endTime) AND (YEAR(ordered_at) = @year)
+	WHERE (FORMAT([ordered_at], 'HH:mm:ss') BETWEEN @startTime AND @endTime) AND (YEAR([ordered_at]) = @year)
 
 	RETURN @NumberOfOrders;
 END;
 GO
 
-CREATE FUNCTION dbo.ufnCompareOrdersOfTheDay(@day DATE)
+CREATE FUNCTION dbo.ufnGetBusiestPeriodOfTheDay(@day DATE)
 RETURNS TABLE
 RETURN
 (
-    SELECT CONVERT(DATE, ordered_at) as OrderDate, 
-		dbo.ufnGetOrdersOfTheDayInTimePeriod('08:00:00', '11:59:59', @day) as MorningOrders, 
-		dbo.ufnGetOrdersOfTheDayInTimePeriod('12:00:00', '16:00:00', @day) as AfternoonOrders
-    FROM coffee_orders
-	WHERE CONVERT(DATE, ordered_at) = '2025-02-17'
-	GROUP BY CONVERT(DATE, ordered_at)
+    SELECT CONVERT(DATE, [ordered_at]) as OrderDate,
+	dbo.ufnGetOrdersOfTheDayInTimePeriod('08:00:00', '11:59:59', @day) as MorningOrders,
+	dbo.ufnGetOrdersOfTheDayInTimePeriod('12:00:00', '16:00:00', @day) as AfternoonOrders
+FROM [coffee_orders]
+WHERE CONVERT(DATE, [ordered_at]) = '2025-02-17'
+GROUP BY CONVERT(DATE, [ordered_at])
 );
 GO
