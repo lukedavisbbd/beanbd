@@ -8,6 +8,7 @@ BEGIN
     BEGIN TRANSACTION;
 
     IF 'stock_consumer' NOT IN (SELECT [roles].[name] FROM [user_roles] INNER JOIN [roles] ON [user_roles].[role] = [roles].[id] INNER JOIN [users] ON [users].[id] = [user_roles].[user] WHERE [user_roles].[user] = @user AND [users].[active] = 1)
+        ROLLBACK TRANSACTION;
         THROW 50000, 'the user does not exist, does not have permission "stock_consumer", or has been deactivated', 0;
 
     -- Decrease stock by according to coffee recipe ingredients
