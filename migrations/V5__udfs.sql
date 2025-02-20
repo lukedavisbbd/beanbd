@@ -1,4 +1,4 @@
----Get total orders for a certain period
+---Get total coffee orders for a certain period
 CREATE FUNCTION udfGetTotalCoffeeOrders (
     @startDate DATETIME, 
     @endDate DATETIME
@@ -10,7 +10,7 @@ BEGIN
 
     SELECT @totalOrders = COUNT(*)
     FROM [coffee_orders]
-    WHERE [ordered_at] >= @startDate AND [ordered_at] <= @endDate;
+    WHERE CONVERT(DATE,[ordered_at]) >= @startDate AND CONVERT(DATE,[ordered_at]) <= @endDate;
 
     RETURN @totalOrders;
 END
