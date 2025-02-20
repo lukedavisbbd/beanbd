@@ -37,18 +37,18 @@ INSERT INTO [user_roles] ([user], [role]) VALUES
     (2, 2);
 
 -- Stock Orders
-INSERT INTO [stock_orders] ([supplier], [status], [ordered_at]) VALUES
-    (3, 'completed', '2025-02-17 10:00:00'),
-    (4, 'completed', '2025-02-16 14:30:00'),
-    (1, 'completed', '2025-02-15 09:45:00'),
-    (3, 'completed', '2025-02-14 16:20:00'),
-    (3, 'failed', '2025-02-13 11:00:00'),
-    (3, 'completed', '2025-02-12 08:15:00'),
-    (1, 'failed', '2025-02-11 13:50:00'),
-    (2, 'completed', '2025-02-10 17:30:00'),
-    (6, 'completed', '2025-02-09 12:00:00'),
-    (2, 'pending', '2025-02-08 15:10:00'),
-    (5, 'pending', '2025-02-07 18:25:00');
+INSERT INTO [stock_orders] ([supplier], [status], [ordered_at], [accepted_by]) VALUES
+    (3, 'completed', '2025-02-17 10:00:00', 1),
+    (4, 'completed', '2025-02-16 14:30:00', 1),
+    (1, 'completed', '2025-02-15 09:45:00', 1),
+    (3, 'completed', '2025-02-14 16:20:00', 1),
+    (3, 'failed', '2025-02-13 11:00:00', NULL),
+    (3, 'completed', '2025-02-12 08:15:00', 1),
+    (1, 'failed', '2025-02-11 13:50:00', NULL),
+    (2, 'completed', '2025-02-10 17:30:00', 1),
+    (6, 'completed', '2025-02-09 12:00:00', 1),
+    (2, 'pending', '2025-02-08 15:10:00', NULL),
+    (5, 'pending', '2025-02-07 18:25:00', NULL);
 
 -- Stock Order Items
 
