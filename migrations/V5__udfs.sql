@@ -29,7 +29,7 @@ BEGIN
 END;
 GO
 
-CREATE FUNCTION dbo.ufnGetOrdersOfTheYeayInGivenTimePeriod(@startTime TIME, @endTime TIME, @year INT = NULL) 
+CREATE FUNCTION dbo.ufnGetOrdersOfTheYearInGivenTimePeriod(@startTime TIME, @endTime TIME, @year INT = NULL) 
 RETURNS int
 BEGIN
 	IF @year IS NULL
