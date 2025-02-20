@@ -7,7 +7,7 @@ BEGIN
 	DECLARE @NumberOfOrders int;
 	SELECT @NumberOfOrders = COUNT(id)
 	FROM dbo.coffee_orders
-	WHERE (FORMAT(ordered_at, 'HH:mm:ss') BETWEEN '08:00:00' AND '11:59:59') AND (FORMAT(ordered_at, 'yyyy-MM-dd') = @day);
+	WHERE (FORMAT(ordered_at, 'HH:mm:ss') BETWEEN @startTime AND @endTime) AND (FORMAT(ordered_at, 'yyyy-MM-dd') = @day);
 
 	RETURN @NumberOfOrders;
 END;
@@ -23,7 +23,21 @@ BEGIN
 	DECLARE @NumberOfOrders int;
 	SELECT @NumberOfOrders = COUNT(id)
 	FROM dbo.coffee_orders
-	WHERE (FORMAT(ordered_at, 'HH:mm:ss') BETWEEN '08:00:00' AND '11:59:59') AND (YEAR(ordered_at) = @year) AND (MONTH(ordered_at) = @month);
+	WHERE (FORMAT(ordered_at, 'HH:mm:ss') BETWEEN @startTime AND @endTime) AND (YEAR(ordered_at) = @year) AND (MONTH(ordered_at) = @month);
+
+	RETURN @NumberOfOrders;
+END;
+GO
+
+CREATE FUNCTION dbo.ufnGetOrdersOfTheYeayInGivenTimePeriod(@startTime TIME, @endTime TIME, @year INT = NULL) 
+RETURNS int
+BEGIN
+	IF @year IS NULL
+        SET @year = YEAR(GETDATE());
+	DECLARE @NumberOfOrders int;
+	SELECT @NumberOfOrders = COUNT(id)
+	FROM dbo.coffee_orders
+	WHERE (FORMAT(ordered_at, 'HH:mm:ss') BETWEEN @startTime AND @endTime) AND (YEAR(ordered_at) = @year)
 
 	RETURN @NumberOfOrders;
 END;
