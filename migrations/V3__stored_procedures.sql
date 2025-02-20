@@ -53,11 +53,16 @@ CREATE PROCEDURE uspOrderStock
     @stock_id INT,
     @quantity REAL,
     @supplier_id INT,
+    @user INT,
     @order_id INT OUTPUT
 AS
 BEGIN
     BEGIN TRANSACTION;
         BEGIN TRY
+        IF 'stock_manager' NOT IN (SELECT [roles].[name] FROM [user_roles] INNER JOIN [roles] ON [user_roles].[role] = [roles].[id] INNER JOIN [users] ON [users].[id] = [user_roles].[user] WHERE [user_roles].[user] = @user AND [users].[active] = 1)
+        BEGIN
+            THROW 50000, 'Invalid User: the user does not exist, does not have permission "stock_manager", or has been deactivated', 0;
+        END
         IF NOT EXISTS (SELECT 1 FROM [suppliers] WHERE [id] = @supplier_id)
         BEGIN
             THROW 50001, 'Invalid Supplier: The specified supplier does not exist.', 1;
