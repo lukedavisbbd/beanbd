@@ -3,7 +3,6 @@ Table stock {
   name varchar [not null, unique]
   unit varchar [not null, ref: > units.name]
   quantity real [not null]
-  accepted_by int [ref: > users.id]
   warning_threshold real
 }
 
@@ -27,6 +26,7 @@ Table stock_orders {
   id int [pk, increment]
   supplier int [not null, ref: > suppliers.id]
   status order_status [not null]
+  accepted_by int [ref: > users.id]
   ordered_at datetime2 [default: `GETDATE()`]
 }
 
