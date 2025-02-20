@@ -41,3 +41,17 @@ BEGIN
 
 	RETURN @NumberOfOrders;
 END;
+GO
+
+CREATE FUNCTION dbo.ufnCompareOrdersOfTheDay(@day DATE)
+RETURNS TABLE
+RETURN
+(
+    SELECT CONVERT(DATE, ordered_at) as OrderDate, 
+		dbo.ufnGetOrdersOfTheDayInTimePeriod('08:00:00', '11:59:59', @day) as MorningOrders, 
+		dbo.ufnGetOrdersOfTheDayInTimePeriod('12:00:00', '16:00:00', @day) as AfternoonOrders
+    FROM coffee_orders
+	WHERE CONVERT(DATE, ordered_at) = '2025-02-17'
+	GROUP BY CONVERT(DATE, ordered_at)
+);
+GO
