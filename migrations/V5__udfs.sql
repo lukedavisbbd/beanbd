@@ -1,7 +1,7 @@
 ---Get total coffee orders for a certain period
 CREATE FUNCTION udfGetTotalCoffeeOrders (
-    @startDate DATETIME, 
-    @endDate DATETIME
+    @startDate DATE, 
+    @endDate DATE
 )
 RETURNS INT
 AS
