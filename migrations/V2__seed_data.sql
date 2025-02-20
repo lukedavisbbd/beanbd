@@ -1,35 +1,35 @@
 -- Suppliers
-INSERT INTO [suppliers] ([name], [phone_number]) VALUES
-    ('BrewMasters Coffee (Pty) Ltd', '+27123456789'),
-    ('Golden Cup Company (Pty) Ltd', '+27654321098'),
-    ('Java Harvest (Pty) Ltd', '+27896543210'),
-    ('DairyFresh (Pty) Ltd', '+27789876543'),
-    ('Smog Grinders (Pty) Ltd', '+27112345678'),
-    ('Decaf Bean Roasters International (Pty) Ltd', '+27665544332');
+INSERT INTO [suppliers] ([id], [name], [phone_number]) VALUES
+    (1, 'BrewMasters Coffee (Pty) Ltd', '+27123456789'),
+    (2, 'Golden Cup Company (Pty) Ltd', '+27654321098'),
+    (3, 'Java Harvest (Pty) Ltd', '+27896543210'),
+    (4, 'DairyFresh (Pty) Ltd', '+27789876543'),
+    (5, 'Smog Grinders (Pty) Ltd', '+27112345678'),
+    (6, 'Decaf Bean Roasters International (Pty) Ltd', '+27665544332');
 
 -- Units
 INSERT INTO [units] VALUES ('units'), ('kg'), ('litres');
 
 -- Stock
-INSERT INTO [stock] ([name], [unit], [quantity], [warning_threshold]) VALUES
-    ('Arabica Coffee Beans', 'kg', 1000, 200),
-    ('Espresso Coffee Beans', 'kg', 500, 100),
-    ('Paper Coffee Cups', 'units', 2000, 300),
-    ('Coffee Filters', 'units', 5000, 1000),
-    ('Sugar Packets', 'kg', 150, 50),
-    ('Milk', 'litres', 250, 50),
-    ('Coffee Grinder Machines', 'units', 10, 2),
-    ('Decaf Coffee Beans', 'kg', 300, 50);
+INSERT INTO [stock] ([id], [name], [unit], [quantity], [warning_threshold]) VALUES
+    (1, 'Arabica Coffee Beans', 'kg', 1000, 200),
+    (2, 'Espresso Coffee Beans', 'kg', 500, 100),
+    (3, 'Paper Coffee Cups', 'units', 2000, 300),
+    (4, 'Coffee Filters', 'units', 5000, 1000),
+    (5, 'Sugar Packets', 'kg', 150, 50),
+    (6, 'Milk', 'litres', 250, 50),
+    (7, 'Coffee Grinder Machines', 'units', 10, 2),
+    (8, 'Decaf Coffee Beans', 'kg', 300, 50);
 
 -- Roles
-INSERT INTO [roles] ([name]) VALUES
-    ('stock_manager'),
-    ('stock_consumer');
+INSERT INTO [roles] ([id], [name]) VALUES
+    (1, 'stock_manager'),
+    (2, 'stock_consumer');
 
 -- Users
-INSERT INTO [users] ([name], [active]) VALUES
-    ('Mr S. Manager', 1),
-    ('Mr B. Rista', 1);
+INSERT INTO [users] ([id], [name], [active]) VALUES
+    (1, 'Mr S. Manager', 1),
+    (2, 'Mr B. Rista', 1);
 
 -- User Roles
 INSERT INTO [user_roles] ([user], [role]) VALUES
@@ -37,18 +37,18 @@ INSERT INTO [user_roles] ([user], [role]) VALUES
     (2, 2);
 
 -- Stock Orders
-INSERT INTO [stock_orders] ([supplier], [status], [ordered_at], [accepted_by]) VALUES
-    (3, 'completed', '2025-02-17 10:00:00', 1),
-    (4, 'completed', '2025-02-16 14:30:00', 1),
-    (1, 'completed', '2025-02-15 09:45:00', 1),
-    (3, 'completed', '2025-02-14 16:20:00', 1),
-    (3, 'failed', '2025-02-13 11:00:00', NULL),
-    (3, 'completed', '2025-02-12 08:15:00', 1),
-    (1, 'failed', '2025-02-11 13:50:00', NULL),
-    (2, 'completed', '2025-02-10 17:30:00', 1),
-    (6, 'completed', '2025-02-09 12:00:00', 1),
-    (2, 'pending', '2025-02-08 15:10:00', NULL),
-    (5, 'pending', '2025-02-07 18:25:00', NULL);
+INSERT INTO [stock_orders] ([id], [supplier], [status], [ordered_at], [accepted_by]) VALUES
+    (1, 3, 'completed', '2025-02-17 10:00:00', 1),
+    (2, 4, 'completed', '2025-02-16 14:30:00', 1),
+    (3, 1, 'completed', '2025-02-15 09:45:00', 1),
+    (4, 3, 'completed', '2025-02-14 16:20:00', 1),
+    (5, 3, 'failed', '2025-02-13 11:00:00', NULL),
+    (6, 3, 'completed', '2025-02-12 08:15:00', 1),
+    (7, 1, 'failed', '2025-02-11 13:50:00', NULL),
+    (8, 2, 'completed', '2025-02-10 17:30:00', 1),
+    (9, 6, 'completed', '2025-02-09 12:00:00', 1),
+    (10, 2, 'pending', '2025-02-08 15:10:00', NULL),
+    (11, 5, 'pending', '2025-02-07 18:25:00', NULL);
 
 -- Stock Order Items
 
@@ -114,10 +114,10 @@ INSERT INTO [stock_order_items] ([order], [stock_item], [quantity]) VALUES
     (11, 6, 50);   -- Milk, 50 litres
 
 -- Coffee Recipes
-INSERT INTO [coffee_recipes] ([name]) VALUES
-    ('Espresso'),
-    ('Cappuccino'),
-    ('Latte');
+INSERT INTO [coffee_recipes] ([id], [name]) VALUES
+    (1, 'Espresso'),
+    (2, 'Cappuccino'),
+    (3, 'Latte');
 
 -- Coffee Recipe Ingredients
 INSERT INTO [coffee_recipe_ingredients] ([coffee], [stock], [quantity]) VALUES
@@ -135,17 +135,9 @@ INSERT INTO [coffee_recipe_ingredients] ([coffee], [stock], [quantity]) VALUES
     (3, 3, 1);    -- Paper Coffee Cups, 1 unit
 
 -- Coffee Orders
-INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
-    (1, 2, '2025-02-17 08:15:00');  -- Espresso
-
-INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
-    (2, 2, '2025-02-17 08:30:00');  -- Cappuccino
-
-INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
-    (3, 2, '2025-02-17 09:00:00');  -- Latte
-
-INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
-    (1, 2, '2025-02-17 10:00:00');  -- Espresso
-
-INSERT INTO [coffee_orders] ([coffee], [user], [ordered_at]) VALUES
-    (2, 2, '2025-02-17 12:30:00');  -- Cappuccino
+INSERT INTO [coffee_orders] ([id], [coffee], [user], [ordered_at]) VALUES
+    (1, 1, 2, '2025-02-17 08:15:00'),  -- Espresso
+    (2, 2, 2, '2025-02-17 08:30:00'),  -- Cappuccino
+    (3, 3, 2, '2025-02-17 09:00:00'),  -- Latte
+    (4, 1, 2, '2025-02-17 10:00:00'),  -- Espresso
+    (5, 2, 2, '2025-02-17 12:30:00');  -- Cappuccino
