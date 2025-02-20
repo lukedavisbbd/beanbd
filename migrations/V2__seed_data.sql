@@ -1,3 +1,5 @@
+SET IDENTITY_INSERT [suppliers] ON
+
 -- Suppliers
 INSERT INTO [suppliers] ([id], [name], [phone_number]) VALUES
     (1, 'BrewMasters Coffee (Pty) Ltd', '+27123456789'),
@@ -7,8 +9,12 @@ INSERT INTO [suppliers] ([id], [name], [phone_number]) VALUES
     (5, 'Smog Grinders (Pty) Ltd', '+27112345678'),
     (6, 'Decaf Bean Roasters International (Pty) Ltd', '+27665544332');
 
+SET IDENTITY_INSERT [suppliers] OFF
+
 -- Units
 INSERT INTO [units] VALUES ('units'), ('kg'), ('litres');
+
+SET IDENTITY_INSERT [stock] ON
 
 -- Stock
 INSERT INTO [stock] ([id], [name], [unit], [quantity], [warning_threshold]) VALUES
@@ -21,20 +27,32 @@ INSERT INTO [stock] ([id], [name], [unit], [quantity], [warning_threshold]) VALU
     (7, 'Coffee Grinder Machines', 'units', 10, 2),
     (8, 'Decaf Coffee Beans', 'kg', 300, 50);
 
+SET IDENTITY_INSERT [stock] OFF
+
+SET IDENTITY_INSERT [roles] ON
+
 -- Roles
 INSERT INTO [roles] ([id], [name]) VALUES
     (1, 'stock_manager'),
     (2, 'stock_consumer');
+
+SET IDENTITY_INSERT [roles] OFF
+
+SET IDENTITY_INSERT [users] ON
 
 -- Users
 INSERT INTO [users] ([id], [name], [active]) VALUES
     (1, 'Mr S. Manager', 1),
     (2, 'Mr B. Rista', 1);
 
+SET IDENTITY_INSERT [users] OFF
+
 -- User Roles
 INSERT INTO [user_roles] ([user], [role]) VALUES
     (1, 1),
     (2, 2);
+
+SET IDENTITY_INSERT [stock_orders] ON
 
 -- Stock Orders
 INSERT INTO [stock_orders] ([id], [supplier], [status], [ordered_at], [accepted_by]) VALUES
@@ -49,6 +67,8 @@ INSERT INTO [stock_orders] ([id], [supplier], [status], [ordered_at], [accepted_
     (9, 6, 'completed', '2025-02-09 12:00:00', 1),
     (10, 2, 'pending', '2025-02-08 15:10:00', NULL),
     (11, 5, 'pending', '2025-02-07 18:25:00', NULL);
+
+SET IDENTITY_INSERT [stock_orders] OFF
 
 -- Stock Order Items
 
@@ -113,11 +133,15 @@ INSERT INTO [stock_order_items] ([order], [stock_item], [quantity]) VALUES
     (11, 7, 2),    -- Coffee Grinder Machines, 2 units
     (11, 6, 50);   -- Milk, 50 litres
 
+SET IDENTITY_INSERT [coffee_recipes] ON
+
 -- Coffee Recipes
 INSERT INTO [coffee_recipes] ([id], [name]) VALUES
     (1, 'Espresso'),
     (2, 'Cappuccino'),
     (3, 'Latte');
+
+SET IDENTITY_INSERT [coffee_recipes] OFF
 
 -- Coffee Recipe Ingredients
 INSERT INTO [coffee_recipe_ingredients] ([coffee], [stock], [quantity]) VALUES
@@ -134,6 +158,8 @@ INSERT INTO [coffee_recipe_ingredients] ([coffee], [stock], [quantity]) VALUES
     (3, 6, 0.15), -- Milk, 0.15 litres (150ml)
     (3, 3, 1);    -- Paper Coffee Cups, 1 unit
 
+SET IDENTITY_INSERT [coffee_orders] ON
+
 -- Coffee Orders
 INSERT INTO [coffee_orders] ([id], [coffee], [user], [ordered_at]) VALUES
     (1, 1, 2, '2025-02-17 08:15:00'),  -- Espresso
@@ -141,3 +167,5 @@ INSERT INTO [coffee_orders] ([id], [coffee], [user], [ordered_at]) VALUES
     (3, 3, 2, '2025-02-17 09:00:00'),  -- Latte
     (4, 1, 2, '2025-02-17 10:00:00'),  -- Espresso
     (5, 2, 2, '2025-02-17 12:30:00');  -- Cappuccino
+
+SET IDENTITY_INSERT [coffee_orders] OFF
