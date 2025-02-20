@@ -1,4 +1,4 @@
-CREATE FUNCTION dbo.ufnGetOrdersOfTheDayInTimePeriod(@startTime TIME, @endTime TIME, @day DATE = NULL ) 
+CREATE FUNCTION udfGetOrdersOfTheDayInTimePeriod(@startTime TIME, @endTime TIME, @day DATE = NULL ) 
 RETURNS int
 BEGIN
 	IF @day IS NULL
@@ -13,7 +13,7 @@ BEGIN
 END;
 GO
 
-CREATE FUNCTION dbo.ufnGetOrdersOfTheMonthInGivenTime(@startTime TIME, @endTime TIME, @year INT, @month INT ) 
+CREATE FUNCTION udfGetOrdersOfTheMonthInGivenTime(@startTime TIME, @endTime TIME, @year INT, @month INT ) 
 RETURNS int
 BEGIN
 	IF @year IS NULL
