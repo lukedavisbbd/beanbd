@@ -42,7 +42,7 @@ BEGIN
     DECLARE @coffee int;
     SELECT @coffee = [id] FROM [coffee_recipes] WHERE [name] = @coffee_name;
 
-    EXEC RecordCoffeeOrderById @coffee, @user;
+    EXEC uspRecordCoffeeOrderById @coffee, @user;
     COMMIT TRANSACTION;
 END
 GO
