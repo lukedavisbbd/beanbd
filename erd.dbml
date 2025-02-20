@@ -3,6 +3,7 @@ Table stock {
   name varchar [not null, unique]
   unit varchar [not null, ref: > units.name]
   quantity real [not null]
+  accepted_by int [ref: > users.id]
   warning_threshold real
 }
 
