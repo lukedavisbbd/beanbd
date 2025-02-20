@@ -8,7 +8,10 @@ BEGIN
     BEGIN TRANSACTION;
 
     IF 'stock_consumer' NOT IN (SELECT [roles].[name] FROM [user_roles] INNER JOIN [roles] ON [user_roles].[role] = [roles].[id] INNER JOIN [users] ON [users].[id] = [user_roles].[user] WHERE [user_roles].[user] = @user AND [users].[active] = 1)
-        THROW 50000, 'the user does not exist, does not have permission "stock_consumer", or has been deactivated', 0;
+    BEGIN
+        ROLLBACK TRANSACTION;
+        THROW 50000, 'Invalid User: the user does not exist, does not have permission "stock_consumer", or has been deactivated', 0;
+    END
 
     -- Decrease stock by according to coffee recipe ingredients
     UPDATE [stock] SET [stock].[quantity] = [stock].[quantity] - (SELECT COALESCE(SUM([ci].[quantity]), 0.0) FROM [coffee_recipe_ingredients] AS [ci] WHERE [ci].[coffee] = @coffee AND [ci].[stock] = [stock].[id]);
@@ -47,36 +50,14 @@ GO
 -- Order stock from supplier
 
 CREATE PROCEDURE OrderStock
-    @stock_id INT,       
-    @quantity REAL,      
-    @supplier_id INT,    
-    @order_id INT OUTPUT,
-    @user_id INT  
+    @stock_id INT,
+    @quantity REAL,
+    @supplier_id INT,
+    @order_id INT OUTPUT
 AS
 BEGIN
     BEGIN TRANSACTION;
-
-    BEGIN TRY
-
-		IF NOT EXISTS (
-            SELECT 1 
-            FROM [users] u
-            WHERE u.[id] = @user_id AND u.[active] = 1
-        )
-        BEGIN
-            THROW 50004, 'Access Denied: Inactive user.', 1;
-        END
-
-        IF NOT EXISTS (
-            SELECT 1 
-            FROM [user_roles] ur
-            INNER JOIN [roles] r ON ur.[role] = r.[id]
-            WHERE ur.[user] = @user_id AND r.[name] = 'stock_manager' 
-        )
-        BEGIN
-            THROW 50000, 'Access Denied: Only Stock Managers can order stock.', 1;
-        END
-
+        BEGIN TRY
         IF NOT EXISTS (SELECT 1 FROM [suppliers] WHERE [id] = @supplier_id)
         BEGIN
             THROW 50001, 'Invalid Supplier: The specified supplier does not exist.', 1;
@@ -113,13 +94,19 @@ GO
 ---mark pending order as completed or failed 
 
 CREATE PROCEDURE CompleteOrder
-    @order_id INT,       
-    @status NVARCHAR(64)
+    @order_id INT,
+    @status NVARCHAR(64),
+    @user INT
 AS
 BEGIN
     BEGIN TRANSACTION;
 
     BEGIN TRY
+        IF 'stock_manager' NOT IN (SELECT [roles].[name] FROM [user_roles] INNER JOIN [roles] ON [user_roles].[role] = [roles].[id] INNER JOIN [users] ON [users].[id] = [user_roles].[user] WHERE [user_roles].[user] = @user AND [users].[active] = 1)
+        BEGIN
+            THROW 50000, 'Invalid User: the user does not exist, does not have permission "stock_manager", or has been deactivated', 0;
+        END
+
         IF NOT EXISTS (SELECT 1 FROM [stock_orders] WHERE [id] = @order_id)
         BEGIN
             THROW 50001, 'Invalid Order: The specified order does not exist.', 1;
@@ -152,7 +139,8 @@ BEGIN
             WHERE soi.[order] = @order_id;
 
             UPDATE so
-            SET so.status = @status
+            SET so.status = @status,
+                so.accepted_by = @user
             FROM [stock_orders] so
             WHERE so.[id] = @order_id;
         END

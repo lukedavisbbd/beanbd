@@ -26,7 +26,7 @@ CREATE TABLE [stock_orders] (
   [status] nvarchar(64) COLLATE Latin1_General_100_CS_AS_SC NOT NULL CHECK ([status] IN ('pending', 'completed', 'failed')),
   [accepted_by] int,
   [ordered_at] datetime2 DEFAULT (GETDATE()),
-  CONSTRAINT stock_order_accepted_by_complete CHECK ([accepted_by] IS NOT NULL AND [status] = 'completed' OR [status] <> 'completed')
+  CONSTRAINT stock_order_accepted_by_complete CHECK ([accepted_by] IS NOT NULL AND [status] = 'completed' OR [accepted_by] IS NULL AND [status] <> 'completed')
 )
 GO
 
