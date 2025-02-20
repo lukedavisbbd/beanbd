@@ -107,8 +107,43 @@ Params: `coffee_name`, `user`
 
 Maps `coffee_name` to its ID and calls `RecordCoffeeOrderById`.
 
+### `StockConsumption`
+ 
+Params: `start_day`
+ 
+Gets the amount of `stock` (in their units) consumed in a certain period from today.
+
+## UDFs
+ 
+### `udfGetTotalCoffeeOrders`
+ 
+Params: `startDate`, `endDate`
+ 
+Gets the total number of `coffee_orders` made in a certain period.
+
 ## Views
 
 ### `vLowStock`
 
 Selects all `stock` items with `quantity` below its `warning_threshold`.
+
+### `vCofeeOrders`
+
+Selects all `coffee_orders` and joins in `coffee_recipes` and `users` to get the name of coffee and the user who handled the order.
+
+### `vStockOrders`
+
+Selects all `stock_orders` and joins in `suppliers` to get the supplier details for the orders.
+
+### `vCompletedStockOrders`
+
+Selects from `vStockOrders` to return only stock orders that have completed.
+
+### `vPendingStockOrders`
+
+Selects from `vStockOrders` to return only stock orders that are pending.
+
+### `vFailedStockOrders`
+
+Selects from `vStockOrders` to return only stock orders that have failed.
+ 
