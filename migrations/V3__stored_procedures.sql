@@ -1,5 +1,5 @@
 --- Record coffee order (by id) and decrease stock by order ingredients
-CREATE PROCEDURE RecordCoffeeOrderById (
+CREATE PROCEDURE uspRecordCoffeeOrderById (
     @coffee int,
     @user int
 )
@@ -31,7 +31,7 @@ END
 GO
 
 --- Record coffee order (by name) and decrease stock by order ingredients
-CREATE PROCEDURE RecordCoffeeOrderByName (
+CREATE PROCEDURE uspRecordCoffeeOrderByName (
     @coffee_name varchar(255),
     @user int
 )
@@ -49,7 +49,7 @@ GO
 
 -- Order stock from supplier
 
-CREATE PROCEDURE OrderStock
+CREATE PROCEDURE uspOrderStock
     @stock_id INT,
     @quantity REAL,
     @supplier_id INT,
@@ -93,7 +93,7 @@ GO
 
 ---mark pending order as completed or failed 
 
-CREATE PROCEDURE CompleteOrder
+CREATE PROCEDURE uspCompleteOrder
     @order_id INT,
     @status NVARCHAR(64),
     @user INT
@@ -156,7 +156,7 @@ END;
 GO
 
 --- get the amount of stock (in their units) consumed for a certain period(days)
-CREATE PROCEDURE StockConsumption( 
+CREATE PROCEDURE uspStockConsumption( 
 	@start_day int
 )
 AS
