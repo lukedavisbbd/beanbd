@@ -91,9 +91,9 @@ BEGIN
 END;
 GO
 
----mark pending order as completed or failed 
+---mark pending order as completed or failed
 
-CREATE PROCEDURE uspCompleteOrder
+CREATE PROCEDURE uspMarkStockOrderStatus
     @order_id INT,
     @status NVARCHAR(64),
     @user INT
