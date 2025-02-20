@@ -91,7 +91,7 @@ User #1 has role #1.
 
 ## Stored Procedures
 
-### `RecordCoffeeOrderById`
+### `uspRecordCoffeeOrderById`
 
 Params: `coffee`, `user`
 
@@ -101,7 +101,7 @@ Creates an order in `coffee_orders` for the given coffee ID and user ID.
 
 Decreases `stock` items by the ingredients of a single order of the given coffee recipe.
 
-### `RecordCoffeeOrderByName`
+### `uspRecordCoffeeOrderByName`
 
 Params: `coffee_name`, `user`
 
@@ -113,6 +113,30 @@ Params: `start_day`
  
 Gets the amount of `stock` (in their units) consumed in a certain period from today.
 
+### `uspOrderStock`
+
+Params: `supplier_id`, `stock_item_id`, `quantity`
+
+Check if the `supplier_id` exists in `suppliers`
+
+Check if the `stock_item_id` exists in `stock`
+
+Creates a new order in `stock_orders` with a `pending` status
+
+Inserts the ordered stock into `stock_order_items`
+
+### `uspMarkStockOrderStatus`
+
+Params: `order_id`, `status`, `user`
+
+Checks if the `user` has a role of `stock_manager`
+
+Ensures `order_id` exists and is `pending`
+
+Updates the `stock_orders` table to mark the order as `completed` or `failed`
+
+If marked as `completed`, updates `stock.quatity` based on the order details.
+
 ## UDFs
  
 ### `udfGetTotalCoffeeOrders`
@@ -120,6 +144,25 @@ Gets the amount of `stock` (in their units) consumed in a certain period from to
 Params: `startDate`, `endDate`
  
 Gets the total number of `coffee_orders` made in a certain period.
+
+### `udfGetOrdersOfTheDayInTimePeriod`
+
+Params: `day`, `endTime`, `startTime`
+
+Function to get number of orders in a time period for a given date
+
+### `udfGetOrdersOfTheMonthInGivenTime`
+
+Params: `month`, `year`, `day`, `endTime`, `startTime`
+
+Function to get number of orders in a time period for a given month
+
+### `udfGetBusiestPeriodOfTheDay`
+
+Params: `day`
+
+Function to get the busiest period of the day between morning and afternoon
+
 
 ## Views
 
